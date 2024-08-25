@@ -1,12 +1,33 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/joho/godotenv"
 	"io"
 	"net/http"
 	"os"
 )
+
+type Stock struct {
+	Data []struct {
+		AssetType     string `json:"asset_type"`
+		Cik           string `json:"cik"`
+		CompositeFigi string `json:"composite_figi"`
+		Currency      string `json:"currency"`
+		Lei           string `json:"lei"`
+		Mic           string `json:"mic"`
+		Security      string `json:"security"`
+		ShareFigi     string `json:"share_figi"`
+		Ticker        string `json:"ticker"`
+	} `json:"data"`
+	Meta struct {
+		Pagination struct {
+			Page    int `json:"page"`
+			PerPage int `json:"per_page"`
+		} `json:"pagination"`
+	} `json:"meta"`
+}
 
 func main() {
 	godotenv.Load()
@@ -31,6 +52,13 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(res)
-	fmt.Println(string(body))
+	// fmt.Println(string(body))
+
+	var stock Stock
+	err = json.Unmarshal(body, &stock)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(stock)
 }
