@@ -9,9 +9,14 @@ import (
 )
 
 func main() {
+
 	godotenv.Load()
 	key := os.Getenv("API_KEY")
 	symbol := "AAPL" // Replace with the ticker symbol you want
+
+	if len(os.Args) >= 2 {
+		symbol = os.Args[1]
+	}
 
 	url := fmt.Sprintf("https://api.twelvedata.com/time_series?symbol=%s&apikey=%s", symbol, key)
 
