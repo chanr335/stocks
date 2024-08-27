@@ -6,8 +6,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	// "log"
-	"time"
+	"log"
+	// "time"
 )
 
 // timezoneCmd represents the timezone command
@@ -20,24 +20,24 @@ var timezoneCmd = &cobra.Command{
                It returns the current time in RFC1123 format.`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		// timezone := args[0]
-		// currentTime, err := getTimeInTimezone(timezone)
-		// if err != nil {
-		// 	log.Fatalln("The timezone string is invalid")
-		// }
-		// fmt.Println(currentTime)
-
 		timezone := args[0]
-		location, _ := time.LoadLocation(timezone)
-		dateFlag, _ := cmd.Flags().GetString("date")
-		var date string
-
-		if dateFlag != "" {
-			date = time.Now().In(location).Format(dateFlag)
-		} else {
-			date = time.Now().In(location).Format(time.RFC3339)[:10]
+		currentTime, err := getTimeInTimezone(timezone)
+		if err != nil {
+			log.Fatalln("The timezone string is invalid")
 		}
-		fmt.Printf("Current date in %v: %v\n", timezone, date)
+		fmt.Println(currentTime)
+
+		// timezone := args[0]
+		// location, _ := time.LoadLocation(timezone)
+		// dateFlag, _ := cmd.Flags().GetString("date")
+		// var date string
+		//
+		// if dateFlag != "" {
+		// 	date = time.Now().In(location).Format(dateFlag)
+		// } else {
+		// 	date = time.Now().In(location).Format(time.RFC3339)[:10]
+		// }
+		// fmt.Printf("Current date in %v: %v\n", timezone, date)
 	},
 }
 
