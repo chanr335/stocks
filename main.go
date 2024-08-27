@@ -18,7 +18,7 @@ func main() {
 		symbol = os.Args[1]
 	}
 
-	url := fmt.Sprintf("https://api.twelvedata.com/time_series?symbol=%s&apikey=%s", symbol, key)
+	url := fmt.Sprintf("https://api.twelvedata.com/price?symbol=%s&apikey=%s", symbol, key)
 
 	//get req
 	req, err := http.NewRequest("GET", url, nil)
