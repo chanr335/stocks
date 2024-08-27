@@ -1,4 +1,4 @@
-module github.com/chanr335/stocks_cli
+module stocks_cli
 
 go 1.23.0
 
