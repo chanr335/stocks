@@ -16,15 +16,22 @@ import (
 var priceCmd = &cobra.Command{
 	Use:   "price",
 	Short: "A brief description of your command",
-	Long:  ``,
+	Long: `Get the price of a stock, \n
+  Usage: price\(ticker, datetime\)`,
 
-	Args: cobra.ExactArgs(1),
+	Args: cobra.RangeArgs(1, 3),
 	Run: func(cmd *cobra.Command, args []string) {
 		godotenv.Load()
 		key := os.Getenv("API_KEY")
 		symbol := args[0] // Replace with the ticker symbol you want
+		datetime := ""
+		if len(args) > 1 {
+			date := args[1]
+			time := args[2]
+			datetime = date + " " + time
+		}
 
-		url := fmt.Sprintf("https://api.twelvedata.com/price?symbol=%s&apikey=%s", symbol, key)
+		url := fmt.Sprintf("https://api.twelvedata.com/price?symbol=%s&datetime=%s&apikey=%s", symbol, datetime, key)
 
 		//get req
 		req, err := http.NewRequest("GET", url, nil)
