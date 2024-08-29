@@ -14,7 +14,7 @@ import (
 )
 
 type Fund struct {
-	Price string `json:"price`
+	Price string `json:"price"`
 }
 
 // priceCmd represents the price command

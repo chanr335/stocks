@@ -4,11 +4,19 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
 	"io"
 	"net/http"
 )
+
+type Exchange struct {
+	Data []struct {
+		Name    string `json:"name"`
+		Country string `json:"country"`
+	} `json:"data"`
+}
 
 // exchangeCmd represents the exchange command
 var exchangeCmd = &cobra.Command{
@@ -37,7 +45,15 @@ var exchangeCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Println(string(body))
+		var exchangeResponse Exchange
+		err = json.Unmarshal(body, &exchangeResponse)
+		if err != nil {
+			panic(err)
+		}
+
+		for _, exchange := range exchangeResponse.Data {
+			fmt.Printf("Name: %s, Country: %s\n", exchange.Name, exchange.Country)
+		}
 	},
 }
 
