@@ -51,7 +51,7 @@ var exchangerateCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Printf("The exchange rate for %s is %f", symbol, exchangerate.Rate)
+		fmt.Printf("The exchange rate for %s is %f\n", symbol, exchangerate.Rate)
 
 	},
 }

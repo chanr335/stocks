@@ -11,15 +11,18 @@ import (
 )
 
 type MarketState struct {
-	Data []struct {
-		Name string `json:"name"`
-		Open string `json:"is_market_open"`
-	} `json:"data"`
+	Name    string `json:"name"`
+	Code    string `json:"code"`
+	Country string `json:"country"`
+	Open    bool   `json:"is_market_open"`
+	After   string `json:"time_after_open"`
+	ToOpen  string `json:"time_to_open"`
+	ToClose string `json:"time_to_close"`
 }
 
 // exchangerateCmd represents the exchangerate command
 var marketstateCmd = &cobra.Command{
-	Use:   "exchangerate",
+	Use:   "marketstate",
 	Short: "A brief description of your command",
 	Long:  ``,
 
@@ -47,14 +50,17 @@ var marketstateCmd = &cobra.Command{
 			panic(err)
 		}
 
-		var marketstate MarketState
-		err = json.Unmarshal(body, &marketstate)
+		// Unmarshal into a slice of MarketState
+		var marketStates []MarketState
+		err = json.Unmarshal(body, &marketStates)
 		if err != nil {
 			panic(err)
 		}
 
-		for _, marketstate := range marketstate.Data {
-			fmt.Printf("The market is open: %s", marketstate.Open)
+		// Loop through the slice and print each market's state
+		for _, marketstate := range marketStates {
+			fmt.Printf("Name: %s, Country: %s, Is Market Open: %t, Time After Open: %s, Time to Open: %s, Time to Close: %s\n",
+				marketstate.Name, marketstate.Country, marketstate.Open, marketstate.After, marketstate.ToOpen, marketstate.ToClose)
 		}
 
 	},

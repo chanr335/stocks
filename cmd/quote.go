@@ -16,7 +16,7 @@ type Quote struct {
 		High       string `json:"high"`
 		Lowchange  string `json:"low_change"`
 		Highchange string `json:"high_change"`
-	}
+	} `json:"fifty_two_week"`
 }
 
 // exchangerateCmd represents the exchangerate command
@@ -49,13 +49,15 @@ var quoteCmd = &cobra.Command{
 			panic(err)
 		}
 
+		// fmt.Println(string(body))
+
 		var quote Quote
 		err = json.Unmarshal(body, &quote)
 		if err != nil {
 			panic(err)
 		}
 
-		fmt.Printf("Quote for %s: \nLow %s\nHigh: %s", symbol, quote.L52.Low, quote.L52.High)
+		fmt.Printf("Quote for %s: \nLow %s\nHigh: %s\n", symbol, quote.L52.Low, quote.L52.High)
 
 	},
 }
