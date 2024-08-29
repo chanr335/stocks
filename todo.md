@@ -6,7 +6,6 @@ Commands:
 - exchangerate (currency1, currency2)
 - marketstate (ticker) : check symbol's market state
 - quote (ticker): see company quotes
-- profile (ticker) : TBD
 
 Features:
 

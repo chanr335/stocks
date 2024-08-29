@@ -3,30 +3,35 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"io"
 	"net/http"
+	"os"
 )
 
-type Exchange struct {
+type MarketState struct {
 	Data []struct {
-		Name    string `json:"name"`
-		Country string `json:"country"`
+		Name string `json:"name"`
+		Open string `json:"is_market_open"`
 	} `json:"data"`
 }
 
-// exchangeCmd represents the exchange command
-var exchangeCmd = &cobra.Command{
-	Use:   "exchange",
+// exchangerateCmd represents the exchangerate command
+var marketstateCmd = &cobra.Command{
+	Use:   "exchangerate",
 	Short: "A brief description of your command",
 	Long:  ``,
 
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fundType := args[0]
+		godotenv.Load()
+		key := os.Getenv("API_KEY")
+		name := args[0]
 
-		url := fmt.Sprintf("https://api.twelvedata.com/exchanges?type=%s", fundType)
+		url := fmt.Sprintf("https://api.twelvedata.com/market_state?name=%s&apikey=%s", name, key)
 		req, err := http.NewRequest("GET", url, nil)
+
 		res, err := http.DefaultClient.Do(req)
 		if err != nil {
 			panic(err)
@@ -42,18 +47,19 @@ var exchangeCmd = &cobra.Command{
 			panic(err)
 		}
 
-		var exchangeResponse Exchange
-		err = json.Unmarshal(body, &exchangeResponse)
+		var marketstate MarketState
+		err = json.Unmarshal(body, &marketstate)
 		if err != nil {
 			panic(err)
 		}
 
-		for _, exchange := range exchangeResponse.Data {
-			fmt.Printf("Name: %s, Country: %s\n", exchange.Name, exchange.Country)
+		for _, marketstate := range marketstate.Data {
+			fmt.Printf("The market is open: %s", marketstate.Open)
 		}
+
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(exchangeCmd)
+	rootCmd.AddCommand(marketstateCmd)
 }
