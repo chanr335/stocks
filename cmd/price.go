@@ -4,6 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
@@ -11,6 +12,10 @@ import (
 	"net/http"
 	"os"
 )
+
+type Fund struct {
+	Price string `json:"price`
+}
 
 // priceCmd represents the price command
 var priceCmd = &cobra.Command{
@@ -52,7 +57,14 @@ var priceCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Println(string(body))
+		var fund Fund
+		err = json.Unmarshal(body, &fund)
+		if err != nil {
+			panic(err)
+		}
+
+		price := fund.Price
+		fmt.Printf("%s's Current Price: $%s USD\n", symbol, price)
 	},
 }
 
