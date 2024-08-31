@@ -1,28 +1,44 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"io"
 	"net/http"
 	"os"
+	"stocks_cli/cmd/utils"
 )
 
-// timeseriesCmd represents the timeseries command
+type DataPoint struct {
+	DateTime string
+	Close    string
+}
+
+type Timeseries struct {
+	Values []struct {
+		DateTime string `json:"datetime"`
+		Close    string `json:"close"`
+	} `json:"values"`
+}
+
 var timeseriesCmd = &cobra.Command{
 	Use:   "timeseries",
 	Short: "A brief description of your command",
 	Long:  ``,
 
-	// Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		slice := []DataPoint{}
 		godotenv.Load()
 		key := os.Getenv("API_KEY")
-		// fundType := args[0]
 
-		url := fmt.Sprintf("https://api.twelvedata.com/time_series?symbol=AAPL,CAD&interval=1min&apikey=%s", key)
+		url := fmt.Sprintf("https://api.twelvedata.com/time_series?symbol=AAPL&interval=1min&apikey=%s", key)
 		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			panic(err)
+		}
+
 		res, err := http.DefaultClient.Do(req)
 		if err != nil {
 			panic(err)
@@ -38,8 +54,20 @@ var timeseriesCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Println(string(body))
+		var timeseries Timeseries
+		err = json.Unmarshal(body, &timeseries)
+		if err != nil {
+			panic(err)
+		}
 
+		for _, set := range timeseries.Values {
+			slice = append(slice, DataPoint{DateTime: set.DateTime, Close: set.Close})
+			// fmt.Printf("datetime: %s, close: %s\n", set.DateTime, set.Close)
+		}
+
+		fmt.Println(slice)
+
+		utils.Graph("Stock Prices", len(slice))
 	},
 }
 
