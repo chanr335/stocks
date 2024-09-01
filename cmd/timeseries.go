@@ -8,13 +8,9 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"stocks_cli/cmd/utils"
+	"stocks_cli/cmd/model"
+	"stocks_cli/cmd/utils" // Import utils package
 )
-
-type DataPoint struct {
-	DateTime string
-	Close    string
-}
 
 type Timeseries struct {
 	Values []struct {
@@ -29,7 +25,7 @@ var timeseriesCmd = &cobra.Command{
 	Long:  ``,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		slice := []DataPoint{}
+		slice := []model.DataPoint{}
 		godotenv.Load()
 		key := os.Getenv("API_KEY")
 
@@ -61,13 +57,10 @@ var timeseriesCmd = &cobra.Command{
 		}
 
 		for _, set := range timeseries.Values {
-			slice = append(slice, DataPoint{DateTime: set.DateTime, Close: set.Close})
-			// fmt.Printf("datetime: %s, close: %s\n", set.DateTime, set.Close)
+			slice = append(slice, model.DataPoint{DateTime: set.DateTime, Close: set.Close})
 		}
 
-		fmt.Println(slice)
-
-		utils.Graph("Stock Prices", len(slice))
+		utils.Graph("Stock Prices: AAPL", slice)
 	},
 }
 

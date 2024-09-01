@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	github.com/gizak/termui/v3 v3.1.0 // indirect
+	github.com/guptarohit/asciigraph v0.7.2 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
